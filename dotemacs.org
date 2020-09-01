@@ -1463,6 +1463,52 @@ request or transparently on file save.
   (doom-modeline-percent-position nil)
   (doom-modeline-vcs-max-length 28)
   :config
+
+  (cl-defmacro me/doom-modeline-segment (name &key faces text (when t))
+    (message "-------------------- %s" name)
+    `(doom-modeline-def-segment ,name
+       (let ((active (doom-modeline--active))
+             (result (if (listp ,text)
+                         (concat ,text)
+                       ,text))
+             (space (doom-modeline-spc)))
+         (when (and ,when result)
+           (concat "[" space result space "]")))))
+
+  ;; (me/doom-modeline-segment me/modals2
+  ;;   :when active
+  ;;   :text (doom-modeline--evil))
+  ;; (me/doom-modeline-segment me/buffer2
+  ;;   :text (doom-modeline--buffer-name))
+  ;; (me/doom-modeline-segment me/buffer-position2
+  ;;   :text ("asdf" (format-mode-line "%l:%c") "asdf"))
+  ;; (me/doom-modeline-segment me/flycheck2
+  ;;   :when (bound-and-true-p flycheck-mode)
+  ;;   :faces ((active . nil))
+  ;;   :text doom-modeline--flycheck-icon doom-modeline--flycheck-text)
+
+  ;; (doom-modeline-def-modeline 'org-src
+  ;;   '(bar me/modals2 me/buffer2 me/buffer-position2 me/flycheck2 selection-info)
+  ;;   '(irc-buffers matches me/process debug me/major-mode workspace-name))
+
+  ;; (me/doom-modeline-segment me/buffer-simple2
+  ;;   :faces ((modified . doom-modeline-buffer-modified)
+  ;;           (active . doom-modeline-buffer-file))
+  ;;   :text (format-mode-line "%b"))
+  ;; (me/doom-modeline-segment me/default-directory2
+  ;;   :faces ((active . doom-modeline-buffer-path))
+  ;;   :text (abbreviate-file-name default-directory))
+  ;; (me/doom-modeline-segment me/major-mode2
+  ;;   :faces ((active . mode-line-buffer-major-mode))
+  ;;   :text mode-name?)
+  ;; (me/doom-modeline-segment me/process2
+  ;;   :faces ((active . nil))
+  ;;   :text (format-mode-line mode-line-process))
+  ;; (me/doom-modeline-segment me/vcs2
+  ;;   :when doom-modeline--vcs-text
+  ;;   :faces ((active . nil))
+  ;;   :text (concat ":" doom-modeline--vcs-text))
+
   (doom-modeline-def-segment me/buffer
     "The buffer description and major mode icon."
     (concat (doom-modeline-spc)
